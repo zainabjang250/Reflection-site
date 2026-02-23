@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acrylic Mirror Collection - Luxury Collection</title>
+    <style>
+        body { background-color: #000; margin: 0; padding: 10px; font-family: 'Segoe UI', Arial, sans-serif; }
+        .cart-status { position: fixed; top: 20px; right: 20px; background: #d4af37; color: black; padding: 10px 20px; border-radius: 50px; font-weight: bold; z-index: 1000; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4); font-size: 0.9rem; }
+        h1 { text-align: center; color: #d4af37; font-size: clamp(1.5rem, 5vw, 2.5rem); margin: 60px 0 30px; font-family: 'Georgia', serif; text-transform: uppercase; letter-spacing: 2px; }
+        
+        .grid-container { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+            gap: 20px; 
+            padding: 15px; 
+            max-width: 1300px; 
+            margin: 0 auto; 
+        }
+
+        .card { background-color: #fff; padding: 15px; text-align: center; border-radius: 12px; display: flex; flex-direction: column; border: 1px solid #333; transition: 0.3s; justify-content: space-between; }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(212, 175, 55, 0.2); }
+        .card img { width: 100%; height: 220px; object-fit: contain; background-color: #fcfcfc; border-radius: 8px; cursor: zoom-in; }
+        
+        /* Clear separation between Name and Description */
+        .description-box { margin: 15px 0 10px; padding: 5px; border-top: 1px solid #eee; }
+        
+        .item-name { 
+            font-size: 1.2rem; 
+            color: #b8860b; /* Golden tone to stand out */
+            font-weight: 800; 
+            display: block; 
+            margin-bottom: 8px; 
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .item-desc { 
+            font-size: 0.9rem; 
+            color: #333; /* Pure dark grey for readability */
+            font-weight: 600; 
+            line-height: 1.4; 
+            display: block;
+            font-style: italic; /* Added italic for extra distinction */
+        }
+        
+        .price-row { display: flex; flex-direction: column; align-items: center; gap: 8px; margin-bottom: 12px; margin-top: 5px; }
+        .price { color: #000; font-weight: 900; font-size: 1.3rem; }
+        
+        .specs-btn { 
+            text-decoration: none; 
+            font-size: 0.75rem; 
+            color: #d4af37; 
+            border: 1px solid #d4af37;
+            padding: 6px 16px;
+            border-radius: 4px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .cart-btn { background-color: #1a242f; color: white; border: none; padding: 12px; cursor: pointer; font-weight: bold; text-transform: uppercase; border-radius: 8px; font-size: 0.8rem; width: 100%; transition: 0.3s; }
+        .cart-btn.added { background-color: #28a745 !important; }
+
+        .modal { display: none; position: fixed; z-index: 2000; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.9); justify-content: center; align-items: center; }
+        .modal-content { max-width: 90%; max-height: 80vh; border: 3px solid #d4af37; border-radius: 8px; }
+        .close-btn { position: absolute; top: 20px; right: 30px; color: #fff; font-size: 45px; cursor: pointer; }
+
+        @media (max-width: 600px) { 
+            .grid-container { grid-template-columns: 1fr; } 
+        }
+    </style>
+</head>
+<body>
+
+    <div class="cart-status">🛒 Cart: <span id="cart-count">0</span></div>
+    <h1>Acrylic Mirror Collection</h1>
+
+    <div id="imageModal" class="modal">
+        <span class="close-btn" onclick="closeModal()">&times;</span>
+        <img class="modal-content" id="imgFull">
+    </div>
+
+    <div class="grid-container" id="productGrid"></div>
+
+    <script>
+        const mirrors = [
+            { name: 'Square Acrylic Mirror', price: '2,100', img: 'pic1.jpg', desc: 'Modern square cut with a premium polished acrylic border.' },
+            { name: 'Elite Black Lacquer Mirror', price: '5,500', img: 'pic2.jpg', desc: 'High-gloss black lacquer border secured with designer brass clips.' },
+            { name: 'Neon Glow Acrylic', price: '3,200', img: 'acrylic mirror 2.jpg', desc: 'Vibrant acrylic edges designed to catch and reflect ambient light.' },
+            { name: 'Cloud Shape Mirror', price: '1,500', img: 'acrylic mirror 2.jpg', desc: 'Whimsical cloud design, perfect for nursery or kids room decor.' },
+            { name: 'Multi-Panel Set', price: '4,100', img: 'acrylic mirror 2.jpg', desc: 'Set of 4 DIY acrylic mirror tiles for custom wall patterns.' },
+            { name: 'Custom Cut Mirror', price: '2,400', img: 'acrylic mirror 2.jpg', desc: 'Precision laser-cut acrylic mirror for bespoke modern interiors.' },
+            { name: 'Iridescent Acrylic', price: '3,800', img: 'acrylic mirror 2.jpg', desc: 'Unique rainbow-tinted border that shifts color with lighting.' },
+            { name: 'Geometric Art Mirror', price: '2,900', img: 'acrylic mirror 2.jpg', desc: 'Contemporary geometric styling made from high-grade acrylic.' },
+            { name: 'Compact Vanity Mirror', price: '1,200', img: 'acrylic mirror 2.jpg', desc: 'Portable shatterproof mirror for grooming, travel, and home use.' },
+            { name: 'Beveled Edge Style', price: '2,750', img: 'acrylic mirror 2.jpg', desc: 'Luxury beveled acrylic edges for a premium crystal-clear finish.' },
+            { name: 'Frameless Safety Mirror', price: '1,950', img: 'acrylic mirror 2.jpg', desc: 'Durable frameless design using ultra-clear shatterproof acrylic.' },
+            { name: 'Decorative Sunburst', price: '3,500', img: 'acrylic mirror 2.jpg', desc: 'Stunning sunburst pattern petals crafted from gold-tone acrylic.' }
+        ];
+
+        const grid = document.getElementById('productGrid');
+        
+        mirrors.forEach(m => {
+            grid.innerHTML += `
+                <div class="card">
+                    <img src="images/${m.img}" alt="Mirror" onclick="openModal(this)">
+                    <div class="description-box">
+                        <span class="item-name">${m.name}</span>
+                        <span class="item-desc">${m.desc}</span>
+                    </div>
+                    <div class="price-row">
+                        <div class="price">Rs. ${m.price}</div>
+                        <a href="details.docx 18.docx" download class="specs-btn">View Details 📋</a>
+                    </div>
+                    <button class="cart-btn" onclick="addToCart(this)">Add to Cart</button>
+                </div>
+            `;
+        });
+
+        let count = 0;
+        function openModal(imgElement) {
+            document.getElementById("imageModal").style.display = "flex";
+            document.getElementById("imgFull").src = imgElement.src;
+        }
+        function closeModal() { document.getElementById("imageModal").style.display = "none"; }
+        
+        function addToCart(button) {
+            count++;
+            document.getElementById('cart-count').innerText = count;
+            button.innerText = "Added ✓";
+            button.classList.add('added');
+            button.disabled = true;
+        }
+
+        window.onclick = function(event) {
+            if (event.target == document.getElementById("imageModal")) closeModal();
+        }
+    </script>
+</body>
+</html>

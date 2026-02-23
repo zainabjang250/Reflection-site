@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bathroom Mirrors - Luxury Collection</title>
+    <style>
+        body { background-color: #000; margin: 0; padding: 10px; font-family: 'Segoe UI', Arial, sans-serif; }
+        .cart-status { position: fixed; top: 20px; right: 20px; background: #d4af37; color: black; padding: 10px 20px; border-radius: 50px; font-weight: bold; z-index: 1000; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4); font-size: 0.9rem; }
+        h1 { text-align: center; color: #d4af37; font-size: clamp(1.5rem, 5vw, 2.5rem); margin: 60px 0 30px; font-family: 'Georgia', serif; text-transform: uppercase; letter-spacing: 2px; }
+        .grid-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; padding: 15px; max-width: 1300px; margin: 0 auto; }
+        .card { background-color: #fff; padding: 15px; text-align: center; border-radius: 12px; display: flex; flex-direction: column; border: 1px solid #333; transition: 0.3s; justify-content: space-between; }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3); }
+        .card img { width: 100%; height: 220px; object-fit: contain; background-color: #fcfcfc; border-radius: 8px; cursor: zoom-in; transition: 0.3s; }
+        .description { font-size: 1rem; color: #111; font-weight: 600; margin: 15px 0 5px; min-height: 40px; display: flex; align-items: center; justify-content: center; }
+        .price-row { display: flex; flex-direction: column; align-items: center; gap: 8px; margin-bottom: 12px; }
+        .price { color: #b8860b; font-weight: 900; font-size: 1.2rem; }
+        .specs-btn { text-decoration: none; font-size: 0.75rem; color: #d4af37; background: transparent; border: 1px solid #d4af37; padding: 6px 16px; border-radius: 4px; font-weight: bold; transition: 0.3s; text-transform: uppercase; }
+        .specs-btn:hover { background: #d4af37; color: #000; }
+        .cart-btn { background-color: #1a242f; color: white; border: none; padding: 12px; cursor: pointer; font-weight: bold; text-transform: uppercase; border-radius: 8px; transition: 0.3s; font-size: 0.8rem; width: 100%; }
+        .cart-btn:hover { background-color: #d4af37; color: black; }
+        .cart-btn.added { background-color: #28a745 !important; color: white !important; }
+        .modal { display: none; position: fixed; z-index: 2000; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.9); justify-content: center; align-items: center; flex-direction: column; }
+        .modal-content { max-width: 90%; max-height: 80vh; border: 3px solid #d4af37; border-radius: 8px; box-shadow: 0 0 30px #d4af37; animation: zoomIn 0.3s ease; object-fit: contain; }
+    </style>
+</head>
+<body>
+    <div class="cart-status">🛒 Cart: <span id="cart-count">0</span></div>
+    <h1>Bathroom Mirrors</h1>
+    <div id="imageModal" class="modal">
+        <span class="close-btn" onclick="closeModal()">&times;</span>
+        <img class="modal-content" id="imgFull">
+        <div id="modal-caption" style="color:#d4af37; margin-top:15px; font-size:1.2rem; font-family: 'Georgia', serif;"></div>
+    </div>
+    <div class="grid-container" id="productGrid"></div>
+    <script>
+        const mirrors = [
+            { name: 'LED Smart Anti-Fog Mirror', price: '3,500', img: 'anti fog.jpg' },
+            { name: 'Luxury Oval Gold Mirror', price: '2,500', img: 'gold mirror 2.jpg' },
+            { name: 'Modern Black Matte Mirror', price: '4,000', img: 'mate mirror.jpg' },
+            { name: 'Wood Frame Mirror', price: '5,500', img: 'wood mirror 5.jpg' },
+            { name: 'Round Backlit Mirror', price: '3,800', img: 'round mirror 4.jpg' },
+            { name: 'Minimalist Silver Mirror', price: '1,500', img: 'silver mirror.jpg' },
+            { name: 'Edge-to-Edge Polished Mirror', price: '1,900', img: 'polished mirror.jpg' },
+            { name: 'Royal Antique Wood Mirror', price: '6,200', img: 'royal mirror 2.jpg' },
+            { name: 'Brushed Nickel Large Mirror', price: '3,300', img: 'large mirror.jpg' },
+            { name: 'Acrylic Hexagon Mirror', price: '2,100', img: 'acrylic mirror 2.jpg' },
+            { name: 'Rustic Industrial Iron Mirror', price: '1,800', img: 'iron mirror 3.jpg' },
+            { name: 'Double Vanity Broad Mirror', price: '4,900', img: 'Double Vanity.jpg' },
+            { name: 'Crystal Clear Beveled Mirror', price: '2,700', img: 'crystal mirror.jpg' },
+            { name: 'Bronze Vintage Mirror', price: '3,300', img: 'Bronze Vintage3.jpg' },
+            { name: 'Infinity Style Deep Frame', price: '2,300', img: 'Infinity Style.jpg' },
+            { name: 'Premium Diamond Cut Mirror', price: '4,500', img: 'diamond mirror 3.jpg' }
+        ];
+        const grid = document.getElementById('productGrid');
+        mirrors.forEach(m => {
+            grid.innerHTML += `
+                <div class="card">
+                    <img src="images/${m.img}" alt="Mirror" onclick="openModal(this, '${m.name}')">
+                    <div class="description">${m.name}</div>
+                    <div class="price-row">
+                        <div class="price">Rs. ${m.price}</div>
+                        <a href="Details-Bathroom.pdf" download class="specs-btn">View Details 📋</a>
+                    </div>
+                    <button class="cart-btn" onclick="addToCart(this)">Add to Cart</button>
+                </div>`;
+        });
+        let count = 0;
+        function openModal(imgElement, description) {
+            document.getElementById("imageModal").style.display = "flex";
+            document.getElementById("imgFull").src = imgElement.src;
+            document.getElementById("modal-caption").innerHTML = description;
+        }
+        function closeModal() { document.getElementById("imageModal").style.display = "none"; }
+        function addToCart(button) {
+            count++;
+            document.getElementById('cart-count').innerText = count;
+            button.innerText = "Added ✓";
+            button.classList.add('added');
+            button.disabled = true;
+        }
+        window.onclick = function(event) { if (event.target == document.getElementById("imageModal")) closeModal(); }
+    </script>
+</body>
+</html>

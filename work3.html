@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acrylic Mirrors - Luxury Collection</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@1,400&display=swap" rel="stylesheet">
+    
+    <style>
+        /* 1. Original Body & Background */
+        body { background-color: #000; margin: 0; padding: 10px; font-family: 'Segoe UI', Arial, sans-serif; }
+        
+        .cart-status { position: fixed; top: 20px; right: 20px; background: #d4af37; color: black; padding: 10px 20px; border-radius: 50px; font-weight: bold; z-index: 1000; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4); font-size: 0.9rem; }
+        
+        h1 { text-align: center; color: #d4af37; font-size: clamp(1.5rem, 5vw, 2.5rem); margin: 60px 0 30px; font-family: 'Georgia', serif; text-transform: uppercase; letter-spacing: 2px; }
+        
+        .grid-container { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+            gap: 20px; 
+            padding: 15px; 
+            max-width: 1300px; 
+            margin: 0 auto; 
+        }
+
+        /* 2. CARD: Same as Bathroom Page */
+        .card { background-color: #fff; padding: 15px; text-align: center; border-radius: 12px; display: flex; flex-direction: column; border: 1px solid #333; transition: 0.3s; justify-content: space-between; }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3); }
+        
+        .card img { width: 100%; height: 220px; object-fit: contain; background-color: #fcfcfc; border-radius: 8px; cursor: zoom-in; transition: 0.3s; }
+        
+        /* 3. DESCRIPTION: No Extra Height */
+        .description { 
+            font-size: 1rem; 
+            color: #111; 
+            font-weight: 600; 
+            margin: 15px 0 8px; 
+            display: block; 
+        }
+
+        .item-name { display: block; margin-bottom: 2px; }
+        
+        .item-desc { 
+            font-size: 0.8rem; 
+            color: #b8860b; 
+            font-family: 'Lora', serif; 
+            font-style: italic; 
+            font-weight: 500;
+            display: block;
+        }
+        
+        .price-row { display: flex; flex-direction: column; align-items: center; gap: 8px; margin-bottom: 12px; }
+        .price { color: #b8860b; font-weight: 900; font-size: 1.2rem; }
+        
+        .specs-btn { 
+            text-decoration: none; 
+            font-size: 0.75rem; 
+            color: #d4af37; 
+            background: transparent;
+            border: 1px solid #d4af37;
+            padding: 6px 16px;
+            border-radius: 4px;
+            font-weight: bold;
+            transition: 0.3s;
+            text-transform: uppercase;
+        }
+        .specs-btn:hover { background: #d4af37; color: #000; }
+
+        .cart-btn { background-color: #1a242f; color: white; border: none; padding: 12px; cursor: pointer; font-weight: bold; text-transform: uppercase; border-radius: 8px; transition: 0.3s; font-size: 0.8rem; width: 100%; }
+        .cart-btn:hover { background-color: #d4af37; color: black; }
+        .cart-btn.added { background-color: #28a745 !important; color: white !important; }
+
+        /* Modal Styles */
+        .modal { display: none; position: fixed; z-index: 2000; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.9); justify-content: center; align-items: center; flex-direction: column; }
+        .modal-content { max-width: 90%; max-height: 80vh; border: 3px solid #d4af37; border-radius: 8px; box-shadow: 0 0 30px #d4af37; animation: zoomIn 0.3s ease; object-fit: contain; }
+        @keyframes zoomIn { from {transform: scale(0.8); opacity: 0;} to {transform: scale(1); opacity: 1;} }
+        .close-btn { position: absolute; top: 20px; right: 30px; color: #fff; font-size: 45px; cursor: pointer; }
+
+        @media (max-width: 600px) { 
+            .grid-container { grid-template-columns: 1fr; gap: 20px; padding: 10px; } 
+            .card { padding: 15px; } 
+            .card img { height: 220px; } 
+        }
+    </style>
+</head>
+<body>
+
+    <div class="cart-status">🛒 Cart: <span id="cart-count">0</span></div>
+    <h1>Acrylic Mirror Collection</h1>
+
+    <div id="imageModal" class="modal">
+        <span class="close-btn" onclick="closeModal()">&times;</span>
+        <img class="modal-content" id="imgFull">
+        <div id="modal-caption" style="color:#d4af37; margin-top:15px; font-size:1.2rem; font-family: 'Georgia', serif;"></div>
+    </div>
+
+    <div id="productGrid" class="grid-container"></div>
+
+    <script>
+        const mirrors = [
+            { name: 'Square Acrylic Mirror', price: '2,100', img: 'pic1.jpg', desc: 'Modern polished border.' },
+            { name: 'Elite Black Lacquer', price: '5,500', img: 'pic2.jpg', desc: 'High-gloss lacquer finish.' },
+            { name: 'Round Neon selfie mirror ', price: '3,200', img: 'pic4.jpg', desc: 'Light reflective edges.' },
+            { name: 'Cloud Shape Mirror', price: '1,500', img: 'pic6.jpg', desc: 'Whimsical nursery decor.' },
+            { name: 'Multi-Panel Set', price: '4,100', img: 'pic9.jpg', desc: 'DIY wall pattern tiles.' },
+            { name: 'Custom Cut Mirror', price: '2,400', img: 'pic10.jpg', desc: 'Precision laser-cut art.' },
+            { name: 'Iridescent Acrylic', price: '3,800', img: 'pic11.jpg', desc: 'Rainbow shifting colors.' },
+            { name: 'Geometric Art Mirror', price: '2,900', img: 'pic12.jpg', desc: 'Contemporary styling.' },
+            { name: 'Compact Vanity Mirror', price: '1,200', img: 'pic14.jpg', desc: 'Portable shatterproof.' },
+            { name: 'Beveled Edge Style', price: '2,750', img: 'pic17.jpg', desc: 'Premium crystal finish.' },
+            { name: 'Frameless Safety', price: '1,950', img: 'pic20.jpg', desc: 'Ultra-clear and durable.' },
+            { name: 'Decorative Sunburst', price: '3,500', img: 'pic2.jpg', desc: 'Elegant gold-tone petals.' }
+        ];
+
+        const grid = document.getElementById('productGrid');
+        
+        mirrors.forEach(m => {
+            grid.innerHTML += `
+                <div class="card">
+                    <img src="images/${m.img}" alt="Mirror" onclick="openModal(this, '${m.name}')">
+                    <div class="description">
+                        <span class="item-name">${m.name}</span>
+                        <span class="item-desc">${m.desc}</span>
+                    </div>
+                    <div class="price-row">
+                        <div class="price">Rs. ${m.price}</div>
+                        <a href="details.docx" download class="specs-btn">View Details 📋</a>
+                    </div>
+                    <button class="cart-btn" onclick="addToCart(this)">Add to Cart</button>
+                </div>
+            `;
+        });
+
+        let count = 0;
+        function openModal(imgElement, name) {
+            document.getElementById("imageModal").style.display = "flex";
+            document.getElementById("imgFull").src = imgElement.src;
+            document.getElementById("modal-caption").innerHTML = name;
+        }
+        function closeModal() { document.getElementById("imageModal").style.display = "none"; }
+        function addToCart(button) {
+            count++;
+            document.getElementById('cart-count').innerText = count;
+            button.innerText = "Added ✓";
+            button.classList.add('added');
+            button.disabled = true;
+        }
+        window.onclick = function(event) { if (event.target == document.getElementById("imageModal")) closeModal(); }
+    </script>
+</body>
+</html>
