@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Metal Frame Mirrors - Luxury Collection</title>
+    <title>Smart LED Mirrors - Premium Collection</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@1,400&display=swap" rel="stylesheet">
     
@@ -17,45 +17,63 @@
             box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4); font-size: 0.9rem; cursor: pointer;
         }
 
-        /* Sidebar Cart */
+        /* Fully Adaptive Sidebar */
         .cart-sidebar {
-            position: fixed; top: 0; right: -400px; width: 350px; height: 100%;
+            position: fixed; top: 0; right: -110%; 
+            width: 380px; 
+            max-width: 75%; /* Mobile pe sirf 75% width lega */
+            height: 100%;
             background: #111; border-left: 2px solid #d4af37; z-index: 2001;
-            transition: 0.4s; padding: 20px; color: white; box-shadow: -5px 0 15px rgba(0,0,0,0.5);
-            overflow-y: auto;
+            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+            padding: 20px; color: white; box-shadow: -10px 0 30px rgba(0,0,0,0.7);
+            overflow-y: auto; box-sizing: border-box;
         }
+
         .cart-sidebar.active { right: 0; }
-        .cart-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 20px; }
-        .close-cart { font-size: 1.5rem; cursor: pointer; color: #d4af37; }
 
-        /* Cart Items */
-        .cart-item { display: flex; align-items: center; gap: 15px; background: #222; padding: 10px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #333; }
-        .cart-item img { width: 60px; height: 60px; object-fit: cover; border-radius: 4px; }
-        .cart-item-info { flex-grow: 1; }
-        .cart-item-info h4 { margin: 0; font-size: 0.9rem; color: #d4af37; }
-        .remove-btn { color: #ff4444; cursor: pointer; font-size: 0.8rem; border: none; background: none; margin-top: 5px; padding: 0; }
+        /* Cart Header with Adaptive Text */
+        .cart-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; padding-bottom: 15px; margin-bottom: 20px; }
+        .cart-header h3 { margin:0; font-size: clamp(0.9rem, 4vw, 1.2rem); } /* Dynamic Text Size */
+        .close-cart { font-size: 1.8rem; cursor: pointer; color: #d4af37; }
 
-        h1 { text-align: center; color: #d4af37; font-size: clamp(1.5rem, 5vw, 2.5rem); margin: 60px 0 30px; font-family: 'Georgia', serif; text-transform: uppercase; letter-spacing: 2px; }
+        /* Responsive Cart Items */
+        .cart-item { display: flex; align-items: center; gap: 10px; background: #1a1a1a; padding: 10px; border-radius: 8px; margin-bottom: 12px; border: 1px solid #333; }
+        .cart-item img { width: clamp(40px, 12vw, 55px); height: clamp(40px, 12vw, 55px); object-fit: cover; border-radius: 4px; border: 1px solid #d4af37; }
         
+        .cart-item-info { flex-grow: 1; min-width: 0; } /* min-width prevents overflow */
+        .cart-item-info h4 { 
+            margin: 0; 
+            font-size: clamp(0.75rem, 3.5vw, 0.9rem); /* Text size adapts to screen */
+            color: #d4af37; 
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; /* Long names handle */
+        }
+        .cart-item-info p { margin: 3px 0; font-size: clamp(0.7rem, 3vw, 0.8rem); color: #ccc; }
+        .remove-btn { color: #ff4444; cursor: pointer; font-size: 0.7rem; border: none; background: none; padding: 0; font-weight: bold; }
+
+        /* Main Grid & Cards */
+        h1 { text-align: center; color: #d4af37; font-size: clamp(1.5rem, 5vw, 2.5rem); margin: 60px 0 30px; font-family: 'Georgia', serif; text-transform: uppercase; letter-spacing: 2px; }
         .grid-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding: 15px; max-width: 1100px; margin: 0 auto; }
         
         @media (max-width: 768px) { .grid-container { grid-template-columns: repeat(2, 1fr); } }
-        @media (max-width: 480px) { .grid-container { grid-template-columns: 1fr; } }
+        @media (max-width: 480px) { 
+            .grid-container { grid-template-columns: 1fr; }
+            .cart-sidebar { padding: 15px; } /* Less padding on small screens */
+        }
 
         .card { background-color: #fff; padding: 15px; text-align: center; border-radius: 12px; display: flex; flex-direction: column; border: 1px solid #333; transition: 0.3s; justify-content: space-between; }
         .card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3); }
         .card img { width: 100%; height: 220px; object-fit: contain; background-color: #fcfcfc; border-radius: 8px; cursor: zoom-in; }
         
-        .description { margin: 15px 0 8px; min-height: 50px; }
+        .description { margin: 15px 0 8px; min-height: 55px; }
         .item-name { display: block; font-size: 1rem; color: #111; font-weight: 600; }
-        .item-desc { font-size: 0.8rem; color: #b8860b; font-family: 'Lora', serif; font-style: italic; }
+        .item-desc { font-size: 0.75rem; color: #b8860b; font-family: 'Lora', serif; font-style: italic; }
         
         .price-row { display: flex; flex-direction: column; align-items: center; gap: 8px; margin-bottom: 12px; }
         .price { color: #b8860b; font-weight: 900; font-size: 1.2rem; }
         .specs-btn { text-decoration: none; font-size: 0.75rem; color: #d4af37; background: transparent; border: 1px solid #d4af37; padding: 6px 16px; border-radius: 4px; font-weight: bold; transition: 0.3s; text-transform: uppercase; }
         .specs-btn:hover { background: #d4af37; color: #000; }
 
-        .cart-btn { background-color: #1a242f; color: white; border: none; padding: 12px; cursor: pointer; font-weight: bold; text-transform: uppercase; border-radius: 8px; transition: 0.3s; width: 100%; }
+        .cart-btn { background-color: #1a242f; color: white; border: none; padding: 12px; cursor: pointer; font-weight: bold; text-transform: uppercase; border-radius: 8px; transition: 0.3s; width: 100%; font-size: 0.8rem; }
         .cart-btn:hover { background-color: #d4af37; color: black; }
         .cart-btn.added { background-color: #28a745 !important; color: white !important; cursor: default; }
 
@@ -70,20 +88,22 @@
 
     <div id="cartSidebar" class="cart-sidebar">
         <div class="cart-header">
-            <h3>Metal Collection Cart</h3>
+            <h3>Your Cart</h3>
             <span class="close-cart" onclick="toggleCart()">&times;</span>
         </div>
         <div id="cartItemsList">
-            <p style="text-align:center; color:#666;">Your cart is empty</p>
+            <p style="text-align:center; color:#666; margin-top: 30px; font-size: 0.8rem;">Your cart is empty</p>
         </div>
-        <hr style="border:0; border-top:1px solid #333; margin: 20px 0;">
-        <div style="display:flex; justify-content:space-between; font-weight:bold;">
-            <span>Total:</span>
-            <span id="cartTotal">Rs. 0</span>
+        <div style="margin-top: 20px; border-top: 1px solid #333; padding-top: 20px;">
+            <div style="display:flex; justify-content:space-between; font-weight:bold; font-size: clamp(0.9rem, 4vw, 1.1rem); color: #d4af37;">
+                <span>Total:</span>
+                <span id="cartTotal">Rs. 0</span>
+            </div>
+            <button onclick="alert('Order Feature Coming Soon!')" style="width:100%; margin-top:15px; background:#d4af37; border:none; padding:10px; font-weight:bold; border-radius:5px; cursor:pointer; font-size: 0.8rem;">CHECKOUT</button>
         </div>
     </div>
 
-    <h1>Metal Frame Collection</h1>
+    <h1>Smart LED Collection</h1>
 
     <div id="imageModal" class="modal">
         <span onclick="closeModal()" style="position:absolute; top:20px; right:30px; color:white; font-size:40px; cursor:pointer;">&times;</span>
@@ -91,19 +111,19 @@
         <div id="modal-caption" style="color:#d4af37; margin-top:15px; font-size:1.2rem;"></div>
     </div>
 
-    <div class="grid-container" id="productGrid"></div>
+    <div id="productGrid" class="grid-container"></div>
 
     <script>
         const mirrors = [
-            { id: 10, name: 'Industrial Iron Frame', price: 4500, img: 'pic1m.jpg', desc: 'Hand-forged matte charcoal.' },
-            { id: 11, name: 'Gold Leaf Metal Trim', price: 6200, img: 'pic3m.jpg', desc: 'Luxury gold leaf royal trim.' },
-            { id: 12, name: 'Matte Black Steel Mirror', price: 3800, img: 'pic4m.jpg', desc: 'Sleek powder-coated finish.' },
-            { id: 13, name: 'Brushed Aluminum Edge', price: 2900, img: 'pic6m.jpg', desc: 'Lightweight high-grade texture.' },
-            { id: 14, name: 'Copper Antique Frame', price: 5100, img: 'pic7m.jpg', desc: 'Vintage aged copper style.' },
-            { id: 15, name: 'Stainless Steel Vanity', price: 4200, img: 'pic8m.jpg', desc: 'Rust-proof bathroom luxury.' },
-            { id: 16, name: 'Rose Gold Metal Circle', price: 3500, img: 'pic9m.jpg', desc: 'Chic warm rose gold plating.' },
-            { id: 17, name: 'Vintage Brass Border', price: 7000, img: 'pic10m.jpg', desc: 'Solid polished brass border.' },
-            { id: 18, name: 'Nickel Polished Mirror', price: 3100, img: 'pic17m.jpg', desc: 'Bright silver reflective tone.' }
+            { id: 30, name: 'Aurora Backlit LED', price: 9499, img: 'pic1l.jpg', desc: 'Touch sensor with dimmable glow.' },
+            { id: 31, name: 'Halo Front-Lit Mirror', price: 8899, img: 'pic3l.jpg', desc: 'Soft warm light with anti-fog tech.' },
+            { id: 32, name: 'Infinite Edge LED', price: 11999, img: 'pic4m.jpg', desc: 'Triple-tone lighting (Warm/Cool/Day).' },
+            { id: 33, name: 'Cyber Glow Vanity', price: 7450, img: 'pic6m.jpg', desc: 'Adjustable brightness cool-white LED.' },
+            { id: 34, name: 'Stellar Night LED', price: 10200, img: 'pic7m.jpg', desc: 'Motion sensor auto-light activation.' },
+            { id: 35, name: 'Pure-Sight Demister', price: 9799, img: 'pic8m.jpg', desc: 'Heat-pad demister for steam-free view.' },
+            { id: 36, name: 'Lunar Eclipse LED', price: 13300, img: 'pic9m.jpg', desc: 'Circular design with sunset glow mode.' },
+            { id: 37, name: 'Matrix Digital Display', price: 10900, img: 'pic10m.jpg', desc: 'In-built digital clock & temp display.' },
+            { id: 38, name: 'Zenith Minimalist LED', price: 6999, img: 'pic12m.jpg', desc: 'Sleek thin-bezel with front-lit LED.' }
         ];
 
         let cart = [];
@@ -119,7 +139,7 @@
                     </div>
                     <div class="price-row">
                         <div class="price">Rs. ${m.price.toLocaleString()}</div>
-                        <a href="Details-Metal.pdf" download class="specs-btn">View Details 📋</a>
+                        <a href="Details Led.pdf" download="Details Led.pdf" class="specs-btn">View Details 📋</a>
                     </div>
                     <button class="cart-btn" id="btn-${m.id}" onclick="addToCart(${m.id})">Add to Cart</button>
                 </div>`;
@@ -138,6 +158,7 @@
                 btn.innerText = "Added ✓";
                 btn.classList.add('added');
                 btn.disabled = true;
+                if(window.innerWidth > 768) toggleCart();
             }
         }
 
@@ -159,7 +180,7 @@
             count.innerText = cart.length;
             
             if (cart.length === 0) {
-                list.innerHTML = '<p style="text-align:center; color:#666;">Your cart is empty</p>';
+                list.innerHTML = '<p style="text-align:center; color:#666; margin-top:30px; font-size: 0.8rem;">Your cart is empty</p>';
                 totalDisplay.innerText = "Rs. 0";
                 return;
             }
@@ -187,7 +208,6 @@
             document.getElementById("modal-caption").innerText = description;
         }
         function closeModal() { document.getElementById("imageModal").style.display = "none"; }
-        
         window.onclick = function(event) { if (event.target == document.getElementById("imageModal")) closeModal(); }
     </script>
 </body>

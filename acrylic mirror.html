@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart LED Mirrors - Premium Collection</title>
+    <title>Acrylic Mirrors - Luxury Collection</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@1,400&display=swap" rel="stylesheet">
     
@@ -17,31 +17,48 @@
             box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4); font-size: 0.9rem; cursor: pointer;
         }
 
-        /* Sidebar Cart */
+        /* Fully Adaptive Sidebar */
         .cart-sidebar {
-            position: fixed; top: 0; right: -400px; width: 350px; height: 100%;
+            position: fixed; top: 0; 
+            right: -110%; /* Hidden */
+            width: 380px; 
+            max-width: 75%; /* Mobile pe side se jagah chhorega */
+            height: 100%;
             background: #111; border-left: 2px solid #d4af37; z-index: 2001;
-            transition: 0.4s; padding: 20px; color: white; box-shadow: -5px 0 15px rgba(0,0,0,0.5);
-            overflow-y: auto;
+            transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+            padding: 20px; color: white; box-shadow: -10px 0 30px rgba(0,0,0,0.7);
+            overflow-y: auto; box-sizing: border-box;
         }
         .cart-sidebar.active { right: 0; }
-        .cart-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 20px; }
-        .close-cart { font-size: 1.5rem; cursor: pointer; color: #d4af37; }
 
-        /* Cart Items */
-        .cart-item { display: flex; align-items: center; gap: 15px; background: #222; padding: 10px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #333; }
-        .cart-item img { width: 60px; height: 60px; object-fit: cover; border-radius: 4px; }
-        .cart-item-info { flex-grow: 1; }
-        .cart-item-info h4 { margin: 0; font-size: 0.9rem; color: #d4af37; }
-        .remove-btn { color: #ff4444; cursor: pointer; font-size: 0.8rem; border: none; background: none; margin-top: 5px; padding: 0; }
+        .cart-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; padding-bottom: 15px; margin-bottom: 20px; }
+        .cart-header h3 { margin:0; font-size: clamp(0.9rem, 4.5vw, 1.2rem); color: #d4af37; }
+        .close-cart { font-size: 1.8rem; cursor: pointer; color: #d4af37; }
+
+        /* Responsive Cart Items */
+        .cart-item { display: flex; align-items: center; gap: 10px; background: #1a1a1a; padding: 10px; border-radius: 8px; margin-bottom: 12px; border: 1px solid #333; }
+        .cart-item img { width: clamp(40px, 12vw, 55px); height: clamp(40px, 12vw, 55px); object-fit: cover; border-radius: 4px; border: 1px solid #d4af37; }
+        
+        .cart-item-info { flex-grow: 1; min-width: 0; }
+        .cart-item-info h4 { 
+            margin: 0; 
+            font-size: clamp(0.75rem, 3.8vw, 0.9rem); 
+            color: #d4af37; 
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; 
+        }
+        .cart-item-info p { margin: 3px 0; font-size: clamp(0.7rem, 3.2vw, 0.8rem); color: #ccc; }
+        .remove-btn { color: #ff4444; cursor: pointer; font-size: 0.7rem; border: none; background: none; padding: 0; font-weight: bold; }
 
         h1 { text-align: center; color: #d4af37; font-size: clamp(1.5rem, 5vw, 2.5rem); margin: 60px 0 30px; font-family: 'Georgia', serif; text-transform: uppercase; letter-spacing: 2px; }
         
-        /* Grid setup - 3 Cards per row */
+        /* Grid setup */
         .grid-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding: 15px; max-width: 1100px; margin: 0 auto; }
         
         @media (max-width: 768px) { .grid-container { grid-template-columns: repeat(2, 1fr); } }
-        @media (max-width: 480px) { .grid-container { grid-template-columns: 1fr; } }
+        @media (max-width: 480px) { 
+            .grid-container { grid-template-columns: 1fr; }
+            .cart-sidebar { padding: 15px; }
+        }
 
         .card { background-color: #fff; padding: 15px; text-align: center; border-radius: 12px; display: flex; flex-direction: column; border: 1px solid #333; transition: 0.3s; justify-content: space-between; }
         .card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3); }
@@ -71,20 +88,22 @@
 
     <div id="cartSidebar" class="cart-sidebar">
         <div class="cart-header">
-            <h3>Smart LED Selection</h3>
+            <h3>Acrylic Selection</h3>
             <span class="close-cart" onclick="toggleCart()">&times;</span>
         </div>
         <div id="cartItemsList">
-            <p style="text-align:center; color:#666;">Your cart is empty</p>
+            <p style="text-align:center; color:#666; font-size: 0.8rem; margin-top: 20px;">Your cart is empty</p>
         </div>
-        <hr style="border:0; border-top:1px solid #333; margin: 20px 0;">
-        <div style="display:flex; justify-content:space-between; font-weight:bold;">
-            <span>Total Amount:</span>
-            <span id="cartTotal">Rs. 0</span>
+        <div style="margin-top: 20px; border-top: 1px solid #333; padding-top: 20px;">
+            <div style="display:flex; justify-content:space-between; font-weight:bold; font-size: clamp(0.9rem, 4vw, 1.1rem); color: #d4af37;">
+                <span>Total:</span>
+                <span id="cartTotal">Rs. 0</span>
+            </div>
+            <button onclick="alert('Proceeding to Order...')" style="width:100%; margin-top:15px; background:#d4af37; border:none; padding:10px; font-weight:bold; border-radius:5px; cursor:pointer; font-size: 0.8rem;">CHECKOUT</button>
         </div>
     </div>
 
-    <h1>Smart LED Collection</h1>
+    <h1>Acrylic Collection</h1>
 
     <div id="imageModal" class="modal">
         <span onclick="closeModal()" style="position:absolute; top:20px; right:30px; color:white; font-size:40px; cursor:pointer;">&times;</span>
@@ -96,21 +115,20 @@
 
     <script>
         const mirrors = [
-            { id: 30, name: 'Aurora Backlit LED', price: 9499, img: 'pic1l.jpg', desc: 'Touch sensor with dimmable glow.' },
-            { id: 31, name: 'Halo Front-Lit Mirror', price: 8899, img: 'pic3l.jpg', desc: 'Soft warm light with anti-fog tech.' },
-            { id: 32, name: 'Infinite Edge LED', price: 11999, img: 'pic4m.jpg', desc: 'Triple-tone lighting (Warm/Cool/Day).' },
-            { id: 33, name: 'Cyber Glow Vanity', price: 7450, img: 'pic6m.jpg', desc: 'Adjustable brightness cool-white LED.' },
-            { id: 34, name: 'Stellar Night LED', price: 10200, img: 'pic7m.jpg', desc: 'Motion sensor auto-light activation.' },
-            { id: 35, name: 'Pure-Sight Demister', price: 9799, img: 'pic8m.jpg', desc: 'Heat-pad demister for steam-free view.' },
-            { id: 36, name: 'Lunar Eclipse LED', price: 13300, img: 'pic9m.jpg', desc: 'Circular design with sunset glow mode.' },
-            { id: 37, name: 'Matrix Digital Display', price: 10900, img: 'pic10m.jpg', desc: 'In-built digital clock & temp display.' },
-            { id: 38, name: 'Zenith Minimalist LED', price: 6999, img: 'pic12m.jpg', desc: 'Sleek thin-bezel with front-lit LED.' }
+            { id: 40, name: 'Square Acrylic Mirror', price: 2100, img: 'pic1.jpg', desc: 'Modern polished border.' },
+            { id: 41, name: 'Elite Black Lacquer', price: 5500, img: 'pic2.jpg', desc: 'High-gloss lacquer finish.' },
+            { id: 42, name: 'Round Neon Mirror', price: 3200, img: 'pic4.jpg', desc: 'Light reflective edges.' },
+            { id: 43, name: 'Cloud Shape Mirror', price: 1500, img: 'pic6.jpg', desc: 'Whimsical nursery decor.' },
+            { id: 44, name: 'Multi-Panel DIY Set', price: 2100, img: 'pic9.jpg', desc: 'DIY wall pattern tiles.' },
+            { id: 45, name: 'Precision Custom Cut', price: 3000, img: 'pic10.jpg', desc: 'Precision laser-cut art.' },
+            { id: 46, name: 'Iridescent Acrylic', price: 3800, img: 'pic11.jpg', desc: 'Rainbow shifting colors.' },
+            { id: 47, name: 'Geometric Art Style', price: 2900, img: 'pic12.jpg', desc: 'Contemporary styling.' },
+            { id: 48, name: 'Beveled Crystal Style', price: 4750, img: 'pic17.jpg', desc: 'Premium crystal finish.' }
         ];
 
         let cart = [];
         const grid = document.getElementById('productGrid');
 
-        // Render 9 Cards
         mirrors.forEach(m => {
             grid.innerHTML += `
                 <div class="card">
@@ -121,13 +139,12 @@
                     </div>
                     <div class="price-row">
                         <div class="price">Rs. ${m.price.toLocaleString()}</div>
-                        <a href="Details Led.pdf" download="Details Led.pdf" class="specs-btn">View Details 📋</a>
+                        <a href="Details.pdf" download="Details.pdf" class="specs-btn">View Details 📋</a>
                     </div>
                     <button class="cart-btn" id="btn-${m.id}" onclick="addToCart(${m.id})">Add to Cart</button>
                 </div>`;
         });
 
-        // Cart Functions
         function toggleCart() {
             document.getElementById('cartSidebar').classList.toggle('active');
         }
@@ -162,7 +179,7 @@
             count.innerText = cart.length;
             
             if (cart.length === 0) {
-                list.innerHTML = '<p style="text-align:center; color:#666; margin-top:20px;">Your cart is empty</p>';
+                list.innerHTML = '<p style="text-align:center; color:#666; font-size: 0.8rem; margin-top: 20px;">Your cart is empty</p>';
                 totalDisplay.innerText = "Rs. 0";
                 return;
             }
@@ -184,15 +201,12 @@
             totalDisplay.innerText = `Rs. ${total.toLocaleString()}`;
         }
 
-        // Modal Functions
         function openModal(imgElement, description) {
             document.getElementById("imageModal").style.display = "flex";
             document.getElementById("imgFull").src = imgElement.src;
             document.getElementById("modal-caption").innerText = description;
         }
         function closeModal() { document.getElementById("imageModal").style.display = "none"; }
-        
-        // Close modal when clicking outside image
         window.onclick = function(event) { if (event.target == document.getElementById("imageModal")) closeModal(); }
     </script>
 </body>
