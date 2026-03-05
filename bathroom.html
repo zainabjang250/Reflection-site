@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bathroom Mirrors - Luxury Collection</title>
+    <style>
+        body { background-color: #000; margin: 0; padding: 10px; font-family: 'Segoe UI', Arial, sans-serif; overflow-x: hidden; }
+        
+        /* Cart Badge */
+        .cart-status { 
+            position: fixed; top: 20px; right: 20px; background: #d4af37; color: black; 
+            padding: 10px 20px; border-radius: 50px; font-weight: bold; z-index: 1000; 
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4); font-size: 0.9rem; cursor: pointer;
+        }
+
+        /* Sidebar Cart */
+        .cart-sidebar {
+            position: fixed; top: 0; right: -400px; width: 350px; height: 100%;
+            background: #111; border-left: 2px solid #d4af37; z-index: 2001;
+            transition: 0.4s; padding: 20px; color: white; box-shadow: -5px 0 15px rgba(0,0,0,0.5);
+            overflow-y: auto;
+        }
+        .cart-sidebar.active { right: 0; }
+        .cart-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; padding-bottom: 10px; margin-bottom: 20px; }
+        .close-cart { font-size: 1.5rem; cursor: pointer; color: #d4af37; }
+
+        /* Cart Items */
+        .cart-item { display: flex; align-items: center; gap: 15px; background: #222; padding: 10px; border-radius: 8px; margin-bottom: 10px; border: 1px solid #333; }
+        .cart-item img { width: 60px; height: 60px; object-fit: cover; border-radius: 4px; }
+        .cart-item-info { flex-grow: 1; }
+        .cart-item-info h4 { margin: 0; font-size: 0.9rem; color: #d4af37; }
+        .remove-btn { color: #ff4444; cursor: pointer; font-size: 0.8rem; border: none; background: none; margin-top: 5px; padding: 0; }
+
+        h1 { text-align: center; color: #d4af37; font-size: clamp(1.5rem, 5vw, 2.5rem); margin: 60px 0 30px; font-family: 'Georgia', serif; text-transform: uppercase; letter-spacing: 2px; }
+        
+        /* 3 Cards per row */
+        .grid-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; padding: 15px; max-width: 1100px; margin: 0 auto; }
+        
+        @media (max-width: 768px) { .grid-container { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 480px) { .grid-container { grid-template-columns: 1fr; } }
+
+        .card { background-color: #fff; padding: 15px; text-align: center; border-radius: 12px; display: flex; flex-direction: column; border: 1px solid #333; transition: 0.3s; justify-content: space-between; }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3); }
+        .card img { width: 100%; height: 220px; object-fit: contain; background-color: #fcfcfc; border-radius: 8px; cursor: zoom-in; }
+        
+        .description { font-size: 1rem; color: #111; font-weight: 600; margin: 15px 0 5px; min-height: 40px; display: flex; align-items: center; justify-content: center; }
+        
+        /* Price and Details Row */
+        .price-row { display: flex; flex-direction: column; align-items: center; gap: 8px; margin-bottom: 12px; }
+        .price { color: #b8860b; font-weight: 900; font-size: 1.2rem; }
+        .specs-btn { text-decoration: none; font-size: 0.75rem; color: #d4af37; background: transparent; border: 1px solid #d4af37; padding: 6px 16px; border-radius: 4px; font-weight: bold; transition: 0.3s; text-transform: uppercase; }
+        .specs-btn:hover { background: #d4af37; color: #000; }
+
+        .cart-btn { background-color: #1a242f; color: white; border: none; padding: 12px; cursor: pointer; font-weight: bold; text-transform: uppercase; border-radius: 8px; transition: 0.3s; width: 100%; }
+        .cart-btn:hover { background-color: #d4af37; color: black; }
+        .cart-btn.added { background-color: #28a745 !important; color: white !important; cursor: default; }
+
+        /* Image Modal */
+        .modal { display: none; position: fixed; z-index: 2000; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.9); justify-content: center; align-items: center; flex-direction: column; }
+        .modal-content { max-width: 90%; max-height: 80vh; border: 3px solid #d4af37; border-radius: 8px; }
+    </style>
+</head>
+<body>
+
+    <div class="cart-status" onclick="toggleCart()">🛒 Cart: <span id="cart-count">0</span></div>
+
+    <div id="cartSidebar" class="cart-sidebar">
+        <div class="cart-header">
+            <h3>Your Selection</h3>
+            <span class="close-cart" onclick="toggleCart()">&times;</span>
+        </div>
+        <div id="cartItemsList">
+            <p style="text-align:center; color:#666;">Your cart is empty</p>
+        </div>
+        <hr style="border:0; border-top:1px solid #333; margin: 20px 0;">
+        <div style="display:flex; justify-content:space-between; font-weight:bold;">
+            <span>Total:</span>
+            <span id="cartTotal">Rs. 0</span>
+        </div>
+    </div>
+
+    <h1>Bathroom Mirrors</h1>
+
+    <div id="imageModal" class="modal">
+        <span onclick="closeModal()" style="position:absolute; top:20px; right:30px; color:white; font-size:40px; cursor:pointer;">&times;</span>
+        <img class="modal-content" id="imgFull">
+        <div id="modal-caption" style="color:#d4af37; margin-top:15px; font-size:1.2rem;"></div>
+    </div>
+
+    <div class="grid-container" id="productGrid"></div>
+
+    <script>
+        const mirrors = [
+            { id: 1, name: 'LED Smart Anti-Fog Mirror', price: 3500, img: 'anti fog.jpg' },
+            { id: 2, name: 'Luxury Oval Gold Mirror', price: 2500, img: 'gold mirror 2.jpg' },
+            { id: 3, name: 'Modern Black Matte Mirror', price: 4000, img: 'mate mirror.jpg' },
+            { id: 4, name: 'Wood Frame Mirror', price: 5500, img: 'wood mirror 5.jpg' },
+            { id: 5, name: 'Round Backlit Mirror', price: 3800, img: 'round mirror 4.jpg' },
+            { id: 6, name: 'Minimalist Silver Mirror', price: 1500, img: 'silver mirror.jpg' },
+            { id: 7, name: 'Edge-to-Edge Polished Mirror', price: 1900, img: 'polished mirror.jpg' },
+            { id: 8, name: 'Royal Antique Wood Mirror', price: 6200, img: 'royal mirror 2.jpg' },
+            { id: 9, name: 'Brushed Nickel Large Mirror', price: 3300, img: 'large mirror.jpg' }
+        ];
+
+        let cart = [];
+        const grid = document.getElementById('productGrid');
+
+        mirrors.forEach(m => {
+            grid.innerHTML += `
+                <div class="card">
+                    <img src="images/${m.img}" alt="Mirror" onclick="openModal(this, '${m.name}')">
+                    <div class="description">${m.name}</div>
+                    <div class="price-row">
+                        <div class="price">Rs. ${m.price.toLocaleString()}</div>
+                        <a href="Details-Bathroom.pdf" download class="specs-btn">View Details 📋</a>
+                    </div>
+                    <button class="cart-btn" id="btn-${m.id}" onclick="addToCart(${m.id})">Add to Cart</button>
+                </div>`;
+        });
+
+        function toggleCart() {
+            document.getElementById('cartSidebar').classList.toggle('active');
+        }
+
+        function addToCart(productId) {
+            const product = mirrors.find(p => p.id === productId);
+            if (!cart.some(item => item.id === productId)) {
+                cart.push(product);
+                updateCartUI();
+                const btn = document.getElementById(`btn-${productId}`);
+                btn.innerText = "Added ✓";
+                btn.classList.add('added');
+                btn.disabled = true;
+            }
+        }
+
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            updateCartUI();
+            const btn = document.getElementById(`btn-${productId}`);
+            if(btn) {
+                btn.innerText = "Add to Cart";
+                btn.classList.remove('added');
+                btn.disabled = false;
+            }
+        }
+
+        function updateCartUI() {
+            const list = document.getElementById('cartItemsList');
+            const count = document.getElementById('cart-count');
+            const totalDisplay = document.getElementById('cartTotal');
+            count.innerText = cart.length;
+            
+            if (cart.length === 0) {
+                list.innerHTML = '<p style="text-align:center; color:#666;">Your cart is empty</p>';
+                totalDisplay.innerText = "Rs. 0";
+                return;
+            }
+
+            let total = 0;
+            list.innerHTML = '';
+            cart.forEach(item => {
+                total += item.price;
+                list.innerHTML += `
+                    <div class="cart-item">
+                        <img src="images/${item.img}">
+                        <div class="cart-item-info">
+                            <h4>${item.name}</h4>
+                            <p>Rs. ${item.price.toLocaleString()}</p>
+                            <button class="remove-btn" onclick="removeFromCart(${item.id})">Remove</button>
+                        </div>
+                    </div>`;
+            });
+            totalDisplay.innerText = `Rs. ${total.toLocaleString()}`;
+        }
+
+        function openModal(imgElement, description) {
+            document.getElementById("imageModal").style.display = "flex";
+            document.getElementById("imgFull").src = imgElement.src;
+            document.getElementById("modal-caption").innerText = description;
+        }
+        function closeModal() { document.getElementById("imageModal").style.display = "none"; }
+    </script>
+</body>
+</html>
